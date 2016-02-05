@@ -1,21 +1,20 @@
-﻿using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Web.Http.Description;
-using System;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System.Net.Http.Formatting;
 
 namespace Swashbuckle.Swagger
 {
-    public class SwaggerGenerator : ISwaggerProvider
+   public class SwaggerMDGenerator : ISwaggerProvider
     {
         private readonly IApiExplorer _apiExplorer;
         private readonly JsonSerializerSettings _jsonSerializerSettings;
         private readonly IDictionary<string, Info> _apiVersions;
         private readonly SwaggerGeneratorOptions _options;
 
-        public SwaggerGenerator(
+        public SwaggerMDGenerator(
             IApiExplorer apiExplorer,
             JsonSerializerSettings jsonSerializerSettings,
             IDictionary<string, Info> apiVersions,
@@ -64,13 +63,11 @@ namespace Swashbuckle.Swagger
                 securityDefinitions = _options.SecurityDefinitions
             };
 
-            foreach(var filter in _options.DocumentFilters)
+            foreach (var filter in _options.DocumentFilters)
             {
                 filter.Apply(swaggerDoc, schemaRegistry, _apiExplorer);
             }
-
             MarkdownDocumenterAppender.CreateMarkDownFrom(swaggerDoc);
-
             return swaggerDoc;
         }
 
@@ -130,10 +127,10 @@ namespace Swashbuckle.Swagger
         {
             var parameters = apiDescription.ParameterDescriptions
                 .Select(paramDesc =>
-                    {
-                        var inPath = apiDescription.RelativePathSansQueryString().Contains("{" + paramDesc.Name + "}");
-                        return CreateParameter(paramDesc, inPath, schemaRegistry);
-                    })
+                {
+                    var inPath = apiDescription.RelativePathSansQueryString().Contains("{" + paramDesc.Name + "}");
+                    return CreateParameter(paramDesc, inPath, schemaRegistry);
+                })
                  .ToList();
 
             var responses = new Dictionary<string, Response>();
@@ -144,8 +141,8 @@ namespace Swashbuckle.Swagger
                 responses.Add("200", new Response { description = "OK", schema = schemaRegistry.GetOrRegister(responseType) });
 
             var operation = new Operation
-            { 
-                tags = new [] { _options.GroupingKeySelector(apiDescription) },
+            {
+                tags = new[] { _options.GroupingKeySelector(apiDescription) },
                 operationId = apiDescription.FriendlyId(),
                 produces = apiDescription.Produces().ToList(),
                 consumes = apiDescription.Consumes().ToList(),
@@ -178,7 +175,7 @@ namespace Swashbuckle.Swagger
             {
                 parameter.type = "string";
                 parameter.required = true;
-                return parameter; 
+                return parameter;
             }
 
             parameter.required = inPath || !paramDesc.ParameterDescriptor.IsOptional;
@@ -192,5 +189,8 @@ namespace Swashbuckle.Swagger
 
             return parameter;
         }
+
+
+
     }
 }
