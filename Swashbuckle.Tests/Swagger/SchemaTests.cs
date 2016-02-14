@@ -238,7 +238,7 @@ namespace Swashbuckle.Tests.Swagger
 
             var expected = JObject.FromObject(new
                 {
-                    @enum = new[] { "book", "album" },
+                    @enum = new[] { "publication", "album" },
                     type = "string"
                 });
             Assert.AreEqual(expected.ToString(), typeSchema.ToString());
@@ -463,6 +463,19 @@ namespace Swashbuckle.Tests.Swagger
 
             var expected = JObject.FromObject(new Dictionary<string, object>
                 {
+                    {
+                        "DynamicObjectSubType", new
+                        {
+                            type = "object",
+                            properties = new
+                            {
+                                Name = new
+                                {
+                                    type = "string" 
+                                } 
+                            }
+                        }
+                    },
                     {
                         "Object", new
                         {

@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Web.Http;
 using Newtonsoft.Json;
@@ -21,8 +22,8 @@ namespace Swashbuckle.Swagger
         private readonly IDictionary<Type, Func<Schema>> _customSchemaMappings;
         private readonly IEnumerable<ISchemaFilter> _schemaFilters;
         private readonly IEnumerable<IModelFilter> _modelFilters;
-        private readonly bool _ignoreObsoleteProperties;
         private readonly Func<Type, string> _schemaIdSelector;
+        private readonly bool _ignoreObsoleteProperties;
         private readonly bool _describeAllEnumsAsStrings;
         private readonly bool _describeStringEnumsInCamelCase;
 
@@ -40,8 +41,8 @@ namespace Swashbuckle.Swagger
             IDictionary<Type, Func<Schema>> customSchemaMappings,
             IEnumerable<ISchemaFilter> schemaFilters,
             IEnumerable<IModelFilter> modelFilters,
-            bool ignoreObsoleteProperties,
             Func<Type, string> schemaIdSelector,
+            bool ignoreObsoleteProperties,
             bool describeAllEnumsAsStrings,
             bool describeStringEnumsInCamelCase)
         {
@@ -49,8 +50,8 @@ namespace Swashbuckle.Swagger
             _customSchemaMappings = customSchemaMappings;
             _schemaFilters = schemaFilters;
             _modelFilters = modelFilters;
-            _ignoreObsoleteProperties = ignoreObsoleteProperties;
             _schemaIdSelector = schemaIdSelector;
+            _ignoreObsoleteProperties = ignoreObsoleteProperties;
             _describeAllEnumsAsStrings = describeAllEnumsAsStrings;
             _describeStringEnumsInCamelCase = describeStringEnumsInCamelCase;
 
@@ -174,11 +175,11 @@ namespace Swashbuckle.Swagger
                 {
                     type = "string",
                     @enum = camelCase
-                        ? type.GetEnumNames().Select(name => name.ToCamelCase()).ToArray()
-                        : type.GetEnumNames()
+                        ? type.GetEnumNamesForSerialization().Select(name => name.ToCamelCase()).ToArray()
+                        : type.GetEnumNamesForSerialization()
                 };
             }
-
+            
             return new Schema
             {
                 type = "integer",
