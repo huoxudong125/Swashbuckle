@@ -90,7 +90,6 @@
     <Compile Include="Swagger\MarkdownDocumenterAppender.cs" />
     <Compile Include="Swagger\IModelFilter.cs" />
     <Compile Include="Swagger\StringExtensions.cs" />
-    <Compile Include="Swagger\SwaggerMDGenerator.cs" />
     <Compile Include="Swagger\TypeExtensions.cs" />
     <Compile Include="Swagger\XmlComments\ApplyXmlTypeComments.cs" />
     <Compile Include="Swagger\XmlComments\ApplyXmlActionComments.cs" />
