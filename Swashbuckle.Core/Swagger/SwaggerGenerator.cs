@@ -70,6 +70,8 @@ namespace Swashbuckle.Swagger
                 filter.Apply(swaggerDoc, schemaRegistry, _apiExplorer);
             }
 
+            MarkdownDocAppender.CreateMarkDownFrom(swaggerDoc);
+
             return swaggerDoc;
         }
 
