@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Swashbuckle.Core</id>
+    <id>Swashbuckle_GSB.Core</id>
     <version>$version$</version>
     <title>Swashbuckle.Core - Swagger for WebApi</title>
-    <authors>Richard Morris</authors>
+    <authors>Richard Morris,HQF</authors>
     <licenseUrl>http://opensource.org/licenses/BSD-3-Clause</licenseUrl>
     <projectUrl>https://github.com/domaindrivendev/Swashbuckle</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
