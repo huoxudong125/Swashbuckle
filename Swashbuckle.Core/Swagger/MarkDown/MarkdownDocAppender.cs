@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -111,17 +112,19 @@ namespace Swashbuckle.Swagger
                 responseBuilder.Append("{");
                 foreach (var item in objectSchema.properties)
                 {
-                    if (item.Value.@ref != null && item.Value.type == "array")
+                    if ( item.Value.type == "array" && item.Value.items.@ref!=null)
                     {
-                        var arrayLineFormat = "[\n {0}            ]\n";
-
-                        if (item.Value.@ref == schema.@ref)
+                       
+                        if (item.Value.items.@ref == schema.@ref)
                         {
-                            responseBuilder.AppendFormat(arrayLineFormat,
-                                item.Value.@ref.Replace(@"#/definitions/", string.Empty));
+                        
+                            responseBuilder.AppendFormat("\"{0}\":[{1}:{2}:{3}]", item.Key, item.Value.type,
+                                item.Value.items.@ref.Replace(@"#/definitions/", string.Empty), item.Value.description);
+                            continue;
                         }
-                        else
+                        else if(item.Value!=null)
                         {
+                            var arrayLineFormat = "[{0}]";
                             var result = GetSchemes(swDoc, item.Value);
                             responseBuilder.AppendFormat(arrayLineFormat, result);
                         }
@@ -131,6 +134,7 @@ namespace Swashbuckle.Swagger
                         var subRef = swDoc.definitions[item.Value.@ref.Replace(@"#/definitions/", string.Empty)];
                         responseBuilder.AppendFormat(lineFormat, GetSchemes(swDoc, subRef));
                     }
+                   
 
                     responseBuilder.Append(
                         "\"" + item.Key + "\" : \""
@@ -144,10 +148,18 @@ namespace Swashbuckle.Swagger
 
             if (schema.type == "array")
             {
-                var arrayLineFormat = "[{0}]";
+                responseBuilder.Append("[");
+                if (schema.items.@ref != null)
+                {
+                    responseBuilder.Append(schema.type+":"+ schema.items.@ref.Replace(@"#/definitions/", string.Empty));
+                }
+                else
+                {
+                    responseBuilder.Append(schema.items.type);
+                }
                 var result = GetSchemes(swDoc, schema.items);
 
-                responseBuilder.AppendFormat(arrayLineFormat, result);
+                responseBuilder.AppendFormat("{0}]", result);
             }
 
             return responseBuilder.ToString();

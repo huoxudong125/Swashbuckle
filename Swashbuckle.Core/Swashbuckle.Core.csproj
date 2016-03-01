@@ -88,7 +88,8 @@
     <Compile Include="Application\SwaggerDocsConfig.cs" />
     <Compile Include="Application\HttpConfigurationExtensions.cs" />
     <Compile Include="Swagger\Annotations\ApplySwaggerResponseAttributes.cs" />
-    <Compile Include="Swagger\MarkdownDocAppender.cs" />
+    <Compile Include="Swagger\MarkDown\JSonHelper.cs" />
+    <Compile Include="Swagger\MarkDown\MarkdownDocAppender.cs" />
     <Compile Include="Swagger\XmlComments\XmlCommentsIdHelper.cs" />
     <Compile Include="Swagger\IModelFilter.cs" />
     <Compile Include="Swagger\StringExtensions.cs" />
