@@ -78,6 +78,7 @@
     <Compile Include="Controllers\ObsoletePropertiesController.cs" />
     <Compile Include="Controllers\PathRequiredController.cs" />
     <Compile Include="Controllers\ProtectedResourcesController.cs" />
+    <Compile Include="Controllers\RecurseTypeController.cs" />
     <Compile Include="Controllers\SelfReferencingTypesController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\DynamicTypesController.cs" />
