@@ -19,7 +19,7 @@ namespace Swashbuckle.Swagger
             using (var writer = File.AppendText(Path.ChangeExtension(docPath, "source.md")))
             {
                 writer.Write(JsonConvert.SerializeObject(swDoc,
-                    new JsonSerializerSettings {Formatting = Formatting.Indented}));
+                    new JsonSerializerSettings { Formatting = Formatting.Indented }));
             }
 
             var docFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Doc");
@@ -33,7 +33,7 @@ namespace Swashbuckle.Swagger
                 File.Delete(lastDocFile);
             }
 
-            File.Move(docPath, Path.Combine(docFolder,lastDocFile ));
+            File.Move(docPath, Path.Combine(docFolder, lastDocFile));
         }
 
         private static void CreateMethods(SwaggerDocument swDoc
@@ -86,7 +86,8 @@ namespace Swashbuckle.Swagger
 ```
 ";
                         var schemaResult = GetSchemes(swDoc, schema);
-                        writer.WriteLine(responseFormat, FormatJson(schemaResult));
+//                        writer.WriteLine(responseFormat, FormatJson(schemaResult));
+                        writer.WriteLine(responseFormat, JsonHelper.FormatJson(schemaResult));
                     }
                 }
             }
@@ -110,18 +111,25 @@ namespace Swashbuckle.Swagger
                 responseBuilder.Append("{");
                 foreach (var item in objectSchema.properties)
                 {
-                    if (item.Value.@ref != null)
+                    if (item.Value.@ref != null && item.Value.type == "array")
+                    {
+                        var arrayLineFormat = "[\n {0}            ]\n";
+
+                        if (item.Value.@ref == schema.@ref)
+                        {
+                            responseBuilder.AppendFormat(arrayLineFormat,
+                                item.Value.@ref.Replace(@"#/definitions/", string.Empty));
+                        }
+                        else
+                        {
+                            var result = GetSchemes(swDoc, item.Value);
+                            responseBuilder.AppendFormat(arrayLineFormat, result);
+                        }
+                    }
+                    else if (item.Value.@ref != null)
                     {
                         var subRef = swDoc.definitions[item.Value.@ref.Replace(@"#/definitions/", string.Empty)];
                         responseBuilder.AppendFormat(lineFormat, GetSchemes(swDoc, subRef));
-                    }
-
-                    if (item.Value.type == "array")
-                    {
-                        var arrayLineFormat = "[\n {0}            ]\n";
-                        var result = GetSchemes(swDoc, item.Value);
-
-                        responseBuilder.AppendFormat(arrayLineFormat, result);
                     }
 
                     responseBuilder.Append(
@@ -294,32 +302,32 @@ namespace Swashbuckle.Swagger
             return path;
         }
 
-        private static string FormatJson(string json)
-        {
-            var indentation = 0;
-            var quoteCount = 0;
-            var result =
-                from ch in json
-                let quotes = ch == '"' ? quoteCount++ : quoteCount
-                let lineBreak =
-                    ch == ',' && quotes%2 == 0
-                        ? ch + Environment.NewLine + string.Concat(Enumerable.Repeat(INDENT_STRING, indentation))
-                        : null
-                let openChar =
-                    ch == '{' || ch == '['
-                        ? ch + Environment.NewLine + string.Concat(Enumerable.Repeat(INDENT_STRING, ++indentation))
-                        : ch.ToString()
-                let closeChar =
-                    ch == '}' || ch == ']'
-                        ? Environment.NewLine + string.Concat(Enumerable.Repeat(INDENT_STRING, --indentation)) + ch
-                        : ch.ToString()
-                select lineBreak == null
-                    ? openChar.Length > 1
-                        ? openChar
-                        : closeChar
-                    : lineBreak;
+        //private static string FormatJson(string json)
+        //{
+        //    var indentation = 0;
+        //    var quoteCount = 0;
+        //    var result =
+        //        from ch in json
+        //        let quotes = ch == '"' ? quoteCount++ : quoteCount
+        //        let lineBreak =
+        //            ch == ',' && quotes % 2 == 0
+        //                ? ch + Environment.NewLine + string.Concat(Enumerable.Repeat(INDENT_STRING, indentation))
+        //                : null
+        //        let openChar =
+        //            ch == '{' || ch == '['
+        //                ? ch + Environment.NewLine + string.Concat(Enumerable.Repeat(INDENT_STRING, ++indentation))
+        //                : ch.ToString()
+        //        let closeChar =
+        //            ch == '}' || ch == ']'
+        //                ? Environment.NewLine + string.Concat(Enumerable.Repeat(INDENT_STRING, --indentation)) + ch
+        //                : ch.ToString()
+        //        select lineBreak == null
+        //            ? openChar.Length > 1
+        //                ? openChar
+        //                : closeChar
+        //            : lineBreak;
 
-            return string.Concat(result);
-        }
+        //    return string.Concat(result);
+        //}
     }
 }
