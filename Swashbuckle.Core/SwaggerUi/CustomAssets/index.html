@@ -60,8 +60,8 @@
         oAuth2ClientSecret: '%(OAuth2ClientSecret)',
         oAuth2Realm: '%(OAuth2Realm)',
         oAuth2AppName: '%(OAuth2AppName)',
-          oAuth2ScopeSeperator: '%(OAuth2ScopeSeperator)',
-          oAuth2AdditionalQueryStringParams: JSON.parse('%(oAuth2AdditionalQueryStringParams)')
+        oAuth2ScopeSeperator: '%(OAuth2ScopeSeperator)',
+        oAuth2AdditionalQueryStringParams: JSON.parse('%(OAuth2AdditionalQueryStringParams)')
       };
 
       // Pre load translate...
@@ -114,8 +114,8 @@
 
       function addApiKeyAuthorization(){
         var key = encodeURIComponent($('#input_apiKey')[0].value);
-        if(key && key.trim() != "") {
-            var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
+        if (key && key.trim() != "") {
+          var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
             window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
             log("added key " + key);
         }

@@ -34,15 +34,15 @@ namespace Swashbuckle.Swagger
         {
             public string SchemaId;
             public Schema Schema;
-        } 
+        }
 
         public SchemaRegistry(
             JsonSerializerSettings jsonSerializerSettings,
             IDictionary<Type, Func<Schema>> customSchemaMappings,
             IEnumerable<ISchemaFilter> schemaFilters,
             IEnumerable<IModelFilter> modelFilters,
-            Func<Type, string> schemaIdSelector,
             bool ignoreObsoleteProperties,
+            Func<Type, string> schemaIdSelector,
             bool describeAllEnumsAsStrings,
             bool describeStringEnumsInCamelCase)
         {
@@ -135,6 +135,8 @@ namespace Swashbuckle.Swagger
 
             switch (type.FullName)
             {
+                case "System.Byte":
+                case "System.SByte":
                 case "System.Int16":
                 case "System.UInt16":
                 case "System.Int32":
@@ -148,14 +150,16 @@ namespace Swashbuckle.Swagger
                 case "System.Double":
                 case "System.Decimal":
                     return new Schema { type = "number", format = "double" };
-                case "System.Byte":
-                case "System.SByte":
+                case "System.Byte[]":
+                case "System.SByte[]":
                     return new Schema { type = "string", format = "byte" };
                 case "System.Boolean":
                     return new Schema { type = "boolean" };
                 case "System.DateTime":
                 case "System.DateTimeOffset":
                     return new Schema { type = "string", format = "date-time" };
+                case "System.Guid":
+                    return new Schema { type = "string", format = "uuid" };
                 default:
                     return new Schema { type = "string" };
             }

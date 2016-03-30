@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net;
+using System.Collections.Generic;
 using NUnit.Framework;
 using Swashbuckle.Application;
 using Swashbuckle.Dummy;
@@ -76,12 +77,16 @@ namespace Swashbuckle.Tests.SwaggerUi
         [Test]
         public void It_exposes_config_for_swagger_ui_outh2_settings()
         {
-            SetUpHandler(c => c.EnableOAuth2Support(
-                "test-client-id",
-                "test-client-secret",
-                "test-realm",
-                "Swagger UI",
-                additionalQueryStringParams: new Dictionary<string, string> {{"TestHeader", "TestValue"}}));
+            SetUpHandler(c =>
+                {
+                    c.EnableOAuth2Support(
+                        "test-client-id",
+                        "test-client-secret",
+                        "test-realm",
+                        "Swagger UI",
+                        " ",
+                        new Dictionary<string, string> { { "TestHeader", "TestValue" } });
+                });
 
             var content = GetContentAsString("http://tempuri.org/swagger/ui/index");
 

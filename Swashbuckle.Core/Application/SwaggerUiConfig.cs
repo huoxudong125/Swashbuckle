@@ -32,7 +32,8 @@ namespace Swashbuckle.Application
                 { "%(OAuth2ClientSecret)", "" },
                 { "%(OAuth2Realm)", "" },
                 { "%(OAuth2AppName)", "" },
-                { "%(OAuth2ScopeSeperator)", " " }
+                { "%(OAuth2ScopeSeperator)", " " },
+                { "%(OAuth2AdditionalQueryStringParams)", "{}" }
             };
             _rootUrlResolver = rootUrlResolver;
 
@@ -120,7 +121,9 @@ namespace Swashbuckle.Application
             _templateParams["%(OAuth2Realm)"] = realm;
             _templateParams["%(OAuth2AppName)"] = appName;
             _templateParams["%(OAuth2ScopeSeperator)"] = scopeSeperator;
-            _templateParams["%(oAuth2AdditionalQueryStringParams)"] = JsonConvert.SerializeObject(additionalQueryStringParams ?? new Dictionary<string, string>());
+
+            if (additionalQueryStringParams != null)
+                _templateParams["%(OAuth2AdditionalQueryStringParams)"] = JsonConvert.SerializeObject(additionalQueryStringParams);
         }
 
         internal IAssetProvider GetSwaggerUiProvider()
